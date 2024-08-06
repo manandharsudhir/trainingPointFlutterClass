@@ -79,12 +79,15 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   ),
                   IndividualWidget(
                     text: "()",
+                    color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
                     text: "%",
+                    color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
                     text: "/",
+                    color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
                     text: "7",
@@ -97,6 +100,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   ),
                   IndividualWidget(
                     text: "*",
+                    color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
                     text: "4",
@@ -109,6 +113,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   ),
                   IndividualWidget(
                     text: "-",
+                    color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
                     text: "3",
@@ -121,10 +126,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   ),
                   IndividualWidget(
                     text: "+",
+                    color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
                     text: "0",
                     colspan: 2,
+                    color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
                     text: ".",
@@ -132,6 +139,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   IndividualWidget(
                     text: "=",
                     color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
                   ),
                 ],
               ),
@@ -176,6 +184,7 @@ class IndividualWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.w600,
+              color: textColor,
             ),
           ),
         ),
