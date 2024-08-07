@@ -1,4 +1,6 @@
+import 'package:calculatorapp/widgets/individual_button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class CalculatorScreen extends StatefulWidget {
   const CalculatorScreen({super.key});
@@ -10,8 +12,38 @@ class CalculatorScreen extends StatefulWidget {
 class _CalculatorScreenState extends State<CalculatorScreen> {
   String input = "123456";
   String output = "";
+  bool brackedTapped = false;
 
-  List<String> values = ["AC", "()", "%", "/", "7", "8", "9"];
+  void onTappedButton(String value) {
+    setState(() {
+      if (value == "AC") {
+        input = "";
+        output = "";
+      } else if (value == "()") {
+        if (brackedTapped) {
+          input += ")";
+          brackedTapped = false;
+        } else {
+          input += "(";
+          brackedTapped = true;
+        }
+      } else if (value == "=") {
+        output = evaluete(input).toString();
+      } else {
+        input += value;
+      }
+    });
+  }
+
+  double evaluete(String input) {
+    input = input.replaceAll("%", "/100");
+    Parser p = Parser();
+    Expression exp = p.parse(input);
+    ContextModel cm = ContextModel();
+    double eval = exp.evaluate(EvaluationType.REAL, cm);
+
+    return eval;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +56,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             child: SafeArea(
               child: Container(
                 color: Theme.of(context).primaryColor,
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
                       input,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white54,
                         fontSize: 24,
                       ),
@@ -41,7 +73,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             "=",
                             style: TextStyle(
                               color: Colors.white54,
@@ -50,7 +82,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                           ),
                           Text(
                             output,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold),
@@ -63,80 +95,104 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               ),
             ),
           ),
+          // Checkbox(
+          //     value: true,
+          //     onChanged: (value) {
+          //       print(value);
+          //     }),
           Expanded(
             flex: 2,
             child: Container(
               color: Colors.white,
-              padding: EdgeInsets.all(24),
+              padding: const EdgeInsets.all(24),
               child: Wrap(
                 runSpacing: 8,
                 spacing: 8,
                 runAlignment: WrapAlignment.center,
                 children: [
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "AC",
                     color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "()",
                     color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "%",
                     color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "/",
                     color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "7",
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "8",
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "9",
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "*",
                     color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "4",
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "5",
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "6",
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "-",
                     color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "3",
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "2",
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "1",
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "+",
                     color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "0",
                     colspan: 2,
                     color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: ".",
                   ),
                   IndividualWidget(
+                    onTap: onTappedButton,
                     text: "=",
                     color: Theme.of(context).primaryColor,
                     textColor: Colors.white,
@@ -146,48 +202,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class IndividualWidget extends StatelessWidget {
-  const IndividualWidget({
-    super.key,
-    required this.text,
-    this.colspan = 4,
-    this.color = Colors.white,
-    this.textColor = Colors.black,
-  });
-
-  final String text;
-  final double colspan;
-  final Color color;
-  final Color textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(
-          16,
-        ),
-      ),
-      width: ((MediaQuery.of(context).size.width) / colspan) -
-          (colspan == 2 ? 28 : 18),
-      height: 100,
-      child: Center(
-        child: FittedBox(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.w600,
-              color: textColor,
-            ),
-          ),
-        ),
       ),
     );
   }
