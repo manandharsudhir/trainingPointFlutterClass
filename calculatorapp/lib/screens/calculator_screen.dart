@@ -10,12 +10,21 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
-  String input = "123456";
+  String input = "";
   String output = "";
   bool brackedTapped = false;
+  bool tappedOnOperator = false;
 
-  void onTappedButton(String value) {
+  void onTappedButton(String value, ButtonType type) {
     setState(() {
+      if (type == ButtonType.operator) {
+        if (tappedOnOperator) {
+          return;
+        }
+        tappedOnOperator = true;
+      } else {
+        tappedOnOperator = false;
+      }
       if (value == "AC") {
         input = "";
         output = "";
@@ -28,21 +37,42 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           brackedTapped = true;
         }
       } else if (value == "=") {
-        output = evaluete(input).toString();
+        try {
+          output = checkIfTheNumberIsDoubleOrInt(evaluate(input));
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              "Calculation Failed",
+              style: TextStyle(fontSize: 32),
+            ),
+          ));
+        }
       } else {
         input += value;
       }
     });
   }
 
-  double evaluete(String input) {
-    input = input.replaceAll("%", "/100");
-    Parser p = Parser();
-    Expression exp = p.parse(input);
-    ContextModel cm = ContextModel();
-    double eval = exp.evaluate(EvaluationType.REAL, cm);
+  String checkIfTheNumberIsDoubleOrInt(double value) {
+    if (value % 1 == 0) {
+      return value.toInt().toString();
+    } else {
+      return value.toString();
+    }
+  }
 
-    return eval;
+  double evaluate(String input) {
+    try {
+      input = input.replaceAll("%", "/100");
+      Parser p = Parser();
+      Expression exp = p.parse(input);
+      ContextModel cm = ContextModel();
+      double eval = exp.evaluate(EvaluationType.REAL, cm);
+
+      return eval;
+    } catch (e) {
+      throw "mero error";
+    }
   }
 
   @override
@@ -70,24 +100,32 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     ),
                     Visibility(
                       visible: output.isNotEmpty,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "=",
-                            style: TextStyle(
-                              color: Colors.white54,
-                              fontSize: 24,
+                      child: SizedBox(
+                        height: 40,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "=",
+                              style: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 24,
+                              ),
                             ),
-                          ),
-                          Text(
-                            output,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                            Expanded(
+                              child: FittedBox(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  output,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   ],
@@ -112,7 +150,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 children: [
                   IndividualWidget(
                     onTap: onTappedButton,
-                    text: "AC",
+                    btn: ButtonClass(title: "AC", type: ButtonType.ac),
                     color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
@@ -205,4 +243,27 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       ),
     );
   }
+}
+
+enum ButtonType {
+  number,
+  operator,
+  ac,
+  bracket,
+}
+
+class ButtonClass {
+  String title;
+  ButtonType type;
+  final double colspan;
+  final Color color;
+  final Color textColor;
+
+  ButtonClass({
+    required this.title,
+    required this.type,
+    this.colspan = 4,
+    this.color = Colors.white,
+    this.textColor = Colors.black,
+  });
 }

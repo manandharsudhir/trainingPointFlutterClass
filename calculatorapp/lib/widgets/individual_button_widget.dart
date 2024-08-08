@@ -1,16 +1,17 @@
+import 'package:calculatorapp/screens/calculator_screen.dart';
 import 'package:flutter/material.dart';
 
 class IndividualWidget extends StatelessWidget {
   const IndividualWidget({
     super.key,
-    required this.text,
+    required this.btn,
     this.colspan = 4,
     this.color = Colors.white,
     this.textColor = Colors.black,
     required this.onTap,
   });
 
-  final String text;
+  final ButtonClass btn;
   final double colspan;
   final Color color;
   final Color textColor;
@@ -20,7 +21,7 @@ class IndividualWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        onTap(text);
+        onTap(btn.title);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -35,7 +36,7 @@ class IndividualWidget extends StatelessWidget {
         child: Center(
           child: FittedBox(
             child: Text(
-              text,
+              btn.title,
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.w600,
