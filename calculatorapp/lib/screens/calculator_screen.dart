@@ -155,7 +155,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   ),
                   IndividualWidget(
                     onTap: onTappedButton,
-                    text: "()",
+                    btn: ButtonClass(
+                      title: "()",
+                      type: ButtonType.bracket,
+                    ),
                     color: Color(0xffF4F5F5),
                   ),
                   IndividualWidget(
