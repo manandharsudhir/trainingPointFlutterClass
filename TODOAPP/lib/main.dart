@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:to_do_app/screens/first_screen.dart';
 
 void main() {
-  runApp(const ToDoApp());
+  runApp(
+    const ToDoApp(),
+  );
 }
 
 class ToDoApp extends StatelessWidget {

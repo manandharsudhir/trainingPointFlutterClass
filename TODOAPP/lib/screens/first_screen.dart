@@ -2,8 +2,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_app/models/task_model.dart';
 import 'package:to_do_app/screens/task_list.dart';
 import 'package:to_do_app/screens/task_screen.dart';
+import 'package:to_do_app/widgets/task_item.dart';
 
 class FirstScreen extends StatefulWidget {
   const FirstScreen({super.key});
@@ -23,6 +25,18 @@ class _FirstScreenState extends State<FirstScreen>
       vsync: this,
     );
     super.initState();
+  }
+
+  List<TaskModel> taskLists = [
+    TaskModel(id: 1, title: "First"),
+    TaskModel(id: 2, title: "Second"),
+    TaskModel(id: 3, title: "Third"),
+  ];
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -139,6 +153,28 @@ class _FirstScreenState extends State<FirstScreen>
     // );
     final todaysDate = DateTime.now();
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text("Add Task"),
+        onPressed: () {
+          // showDialog(
+          //     context: context,
+          //     builder: (context) {
+          //       return Dialog(
+          //         child: Text("data"),
+          //       );
+          //     });
+          showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return AddTaskWidget();
+              });
+
+          // setState(() {
+          //   taskLists.add(TaskModel(id: 4, title: "Hello"));
+          // });
+        },
+      ),
       appBar: AppBar(
         toolbarHeight: kToolbarHeight + 50,
         centerTitle: false,
@@ -263,7 +299,18 @@ class _FirstScreenState extends State<FirstScreen>
           Expanded(
             child: TabBarView(controller: tabController, children: [
               Container(
-                child: Text("not done"),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ListView.separated(
+                    itemBuilder: (context, index) => TaskItemWidget(
+                      model: taskLists[index],
+                    ),
+                    itemCount: taskLists.length,
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: 50,
+                    ),
+                  ),
+                ),
               ),
               Container(
                 child: Text(" progressing"),
@@ -273,6 +320,37 @@ class _FirstScreenState extends State<FirstScreen>
               ),
             ]),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class AddTaskWidget extends StatelessWidget {
+  const AddTaskWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      child: Column(
+        children: [
+          TextFormField(
+            // autofocus: true,
+            decoration: InputDecoration(
+              hintText: "Title",
+              labelText: "Title",
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+              ),
+            ),
+          ),
+          TextField(),
+          ElevatedButton(onPressed: () {}, child: Text("Save"))
         ],
       ),
     );
