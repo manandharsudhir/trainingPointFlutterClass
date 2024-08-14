@@ -167,7 +167,14 @@ class _FirstScreenState extends State<FirstScreen>
           showModalBottomSheet(
               context: context,
               builder: (context) {
-                return AddTaskWidget();
+                return AddTaskWidget(
+                  onSave: (String title, String? description) {
+                    setState(() {
+                      taskLists.add(TaskModel(
+                          id: 1, title: title, description: description ?? ""));
+                    });
+                  },
+                );
               });
 
           // setState(() {
@@ -326,31 +333,89 @@ class _FirstScreenState extends State<FirstScreen>
   }
 }
 
-class AddTaskWidget extends StatelessWidget {
+class AddTaskWidget extends StatefulWidget {
   const AddTaskWidget({
     super.key,
+    required this.onSave,
   });
+
+  final Function(String, String?) onSave;
+
+  @override
+  State<AddTaskWidget> createState() => _AddTaskWidgetState();
+}
+
+class _AddTaskWidgetState extends State<AddTaskWidget> {
+  final formkey = GlobalKey<FormState>();
+  late final TextEditingController titleController;
+  late final TextEditingController descController;
+
+  @override
+  void initState() {
+    titleController = TextEditingController();
+    descController = TextEditingController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          TextFormField(
-            // autofocus: true,
-            decoration: InputDecoration(
-              hintText: "Title",
-              labelText: "Title",
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.red),
-              ),
+          Form(
+            key: formkey,
+            child: Column(
+              children: [
+                TextFormField(
+                  // autofocus: true,
+                  controller: titleController,
+                  validator: (value) {
+                    if ((value ?? "").isEmpty) {
+                      return "Title is required";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    hintText: "Title",
+                    labelText: "Title",
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                TextFormField(
+                  // autofocus: true,
+                  controller: descController,
+                  maxLines: 1,
+                  keyboardType: TextInputType.multiline,
+                  decoration: InputDecoration(
+                    hintText: "Write an description",
+                    labelText: "Description",
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          TextField(),
-          ElevatedButton(onPressed: () {}, child: Text("Save"))
+          ElevatedButton(
+              onPressed: () {
+                if (formkey.currentState!.validate()) {
+                  widget.onSave(titleController.text, descController.text);
+                }
+              },
+              child: Text("Save"))
         ],
       ),
     );
