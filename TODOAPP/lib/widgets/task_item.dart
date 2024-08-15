@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_app/models/task_model.dart';
@@ -6,8 +8,11 @@ class TaskItemWidget extends StatelessWidget {
   const TaskItemWidget({
     super.key,
     required this.model,
+    required this.onStatusChanged,
   });
   final TaskModel model;
+
+  final void Function(TaskStaus?)? onStatusChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +42,17 @@ class TaskItemWidget extends StatelessWidget {
                 ),
               ],
             ),
-            Icon(
-              Icons.more_vert,
-              color: Colors.black,
-            ),
+            DropdownButton(
+                items: TaskStaus.values
+                    .map(
+                      (e) => DropdownMenuItem<TaskStaus>(
+                        child: Text(e.name),
+                        value: e,
+                      ),
+                    )
+                    .toList(),
+                value: model.status,
+                onChanged: onStatusChanged)
           ],
         ),
       ),

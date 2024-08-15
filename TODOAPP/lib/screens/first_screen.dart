@@ -305,29 +305,77 @@ class _FirstScreenState extends State<FirstScreen>
           ),
           Expanded(
             child: TabBarView(controller: tabController, children: [
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ListView.separated(
-                    itemBuilder: (context, index) => TaskItemWidget(
-                      model: taskLists[index],
-                    ),
-                    itemCount: taskLists.length,
-                    separatorBuilder: (context, index) => SizedBox(
-                      height: 50,
-                    ),
-                  ),
-                ),
+              TaskListWidget(
+                taskLists: taskLists
+                    .where((e) => e.status == TaskStaus.nodone)
+                    .toList(),
+                onStatusChanged: (value, id) {
+                  setState(() {
+                    taskLists.firstWhere((element) => element.id == id).status =
+                        value!;
+                  });
+                },
               ),
-              Container(
-                child: Text(" progressing"),
+              TaskListWidget(
+                taskLists: taskLists
+                    .where((e) => e.status == TaskStaus.progressing)
+                    .toList(),
+                onStatusChanged: (value, id) {
+                  setState(() {
+                    taskLists.firstWhere((element) => element.id == id).status =
+                        value!;
+                  });
+                },
               ),
-              Container(
-                child: Text("completed"),
+              TaskListWidget(
+                taskLists: taskLists
+                    .where((e) => e.status == TaskStaus.completed)
+                    .toList(),
+                onStatusChanged: (value, id) {
+                  setState(() {
+                    taskLists.firstWhere((element) => element.id == id).status =
+                        value!;
+                  });
+                },
               ),
             ]),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class TaskListWidget extends StatelessWidget {
+  const TaskListWidget({
+    super.key,
+    required this.taskLists,
+    required this.onStatusChanged,
+  });
+
+  final List<TaskModel> taskLists;
+  final void Function(TaskStaus?, int)? onStatusChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView.separated(
+          itemBuilder: (context, index) => TaskItemWidget(
+            model: taskLists[index],
+            onStatusChanged: (value) {
+              onStatusChanged!(
+                value,
+                taskLists[index].id,
+              );
+            },
+          ),
+          itemCount: taskLists.length,
+          separatorBuilder: (context, index) => SizedBox(
+            height: 50,
+          ),
+        ),
       ),
     );
   }
@@ -413,6 +461,7 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
               onPressed: () {
                 if (formkey.currentState!.validate()) {
                   widget.onSave(titleController.text, descController.text);
+                  Navigator.of(context).pop();
                 }
               },
               child: Text("Save"))
