@@ -1,23 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todosecond/features/homepage/provider/todo_provider.dart';
 
 import '../../model/todo_model.dart';
 
-class TodoItemWidget extends StatelessWidget {
+class TodoItemWidget extends ConsumerWidget {
   const TodoItemWidget({
     super.key,
     required this.todo,
-    required this.onPressed,
   });
 
   final TodoModel todo;
-  final Function(int) onPressed;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () {
-        onPressed(todo.id);
-      },
+      onTap: () {},
       behavior: HitTestBehavior.opaque,
       child: Container(
         decoration: const BoxDecoration(

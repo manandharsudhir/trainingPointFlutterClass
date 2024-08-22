@@ -1,30 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todosecond/features/homepage/provider/todo_provider.dart';
 
 import '../../model/todo_model.dart';
 import 'todo_item_widget.dart';
 
-class AllTodos extends StatelessWidget {
+class AllTodos extends ConsumerWidget {
   const AllTodos({
     super.key,
-    required this.allTodos,
-    required this.onPressed,
   });
-  final List<TodoModel> allTodos;
-  final Function(int) onPressed;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final todos = ref.watch(todoProvider);
     return ListView.separated(
       padding: EdgeInsets.all(16),
       separatorBuilder: (context, index) => const SizedBox(
         height: 8,
       ),
       itemBuilder: (context, index) => TodoItemWidget(
-        todo: allTodos[index],
-        onPressed: (int id) {
-          onPressed(id);
-        },
+        todo: todos[index],
       ),
-      itemCount: allTodos.length,
+      itemCount: todos.length,
     );
   }
 }

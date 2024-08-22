@@ -1,25 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todosecond/features/homepage/provider/todo_provider.dart';
 import 'package:todosecond/features/homepage/view/widgets/add_todo_bottom_sheet_widget.dart';
 import 'package:todosecond/features/homepage/view/widgets/all_todos_widget.dart';
 
 import '../../model/todo_model.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  List<TodoModel> todos = [
-    TodoModel(id: 1, title: "First Todo"),
-    TodoModel(id: 2, title: "Second Todo"),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final todos = ref.watch(todoProvider);
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
@@ -27,14 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
           showModalBottomSheet(
               context: context,
               builder: (context) {
-                return AddTodoBottomSheetWidget(
-                  onPressed: (TodoModel todo) {
-                    setState(() {
-                      todos.add(todo);
-                    });
-                    Navigator.pop(context);
-                  },
-                );
+                return AddTodoBottomSheetWidget();
               });
         },
         label: const Text(
@@ -61,24 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ]),
               Expanded(
                   child: TabBarView(children: [
-                AllTodos(
-                  allTodos: todos,
-                  onPressed: (int todoId) {
-                    setState(() {
-                      final selectedTodo =
-                          todos.firstWhere((e) => e.id == todoId);
-                      if (selectedTodo.status == TodoStatus.completed) {
-                        selectedTodo.status = TodoStatus.incompleted;
-                      } else {
-                        selectedTodo.status = TodoStatus.completed;
-                      }
-                      final index = todos.indexWhere((e) => e.id == todoId);
-                      setState(() {
-                        todos[index] = selectedTodo;
-                      });
-                    });
-                  },
-                ),
+                AllTodos(),
                 Container(),
                 Container(),
               ]))

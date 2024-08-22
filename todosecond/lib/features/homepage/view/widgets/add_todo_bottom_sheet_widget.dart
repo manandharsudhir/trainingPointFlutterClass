@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todosecond/features/homepage/model/todo_model.dart';
+import 'package:todosecond/features/homepage/provider/todo_provider.dart';
 
 class AddTodoBottomSheetWidget extends StatefulWidget {
-  AddTodoBottomSheetWidget({super.key, required this.onPressed});
-
-  final Function(TodoModel) onPressed;
+  AddTodoBottomSheetWidget({
+    super.key,
+  });
 
   @override
   State<AddTodoBottomSheetWidget> createState() =>
@@ -59,18 +61,23 @@ class _AddTodoBottomSheetWidgetState extends State<AddTodoBottomSheetWidget> {
                 ),
               ],
             )),
-        ElevatedButton(
-          onPressed: () {
-            if (formKey.currentState!.validate()) {
-              widget.onPressed(TodoModel(
-                id: DateTime.now().millisecondsSinceEpoch,
-                title: titleController.text,
-                description: descController.text,
-              ));
-            }
-          },
-          child: const Text("Add Todo"),
-        )
+        Consumer(builder: (context, ref, child) {
+          return ElevatedButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                ref.read(todoProvider.notifier).update((value) {
+                  value.add(TodoModel(
+                    id: DateTime.now().millisecondsSinceEpoch,
+                    title: titleController.text,
+                    description: descController.text,
+                  ));
+                  return [...value];
+                });
+              }
+            },
+            child: const Text("Add Todo"),
+          );
+        })
       ],
     );
   }
