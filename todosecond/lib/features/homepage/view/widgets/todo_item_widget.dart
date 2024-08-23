@@ -15,7 +15,9 @@ class TodoItemWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        ref.read(todoProvider.notifier).toggleStatus(todo.id);
+      },
       behavior: HitTestBehavior.opaque,
       child: Container(
         decoration: const BoxDecoration(

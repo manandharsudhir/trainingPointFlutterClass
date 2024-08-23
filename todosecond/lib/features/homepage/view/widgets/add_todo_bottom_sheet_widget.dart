@@ -65,14 +65,12 @@ class _AddTodoBottomSheetWidgetState extends State<AddTodoBottomSheetWidget> {
           return ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                ref.read(todoProvider.notifier).update((value) {
-                  value.add(TodoModel(
-                    id: DateTime.now().millisecondsSinceEpoch,
-                    title: titleController.text,
-                    description: descController.text,
-                  ));
-                  return [...value];
-                });
+                ref.read(todoProvider.notifier).addTodo(TodoModel(
+                      id: DateTime.now().millisecondsSinceEpoch,
+                      title: titleController.text,
+                      description: descController.text,
+                    ));
+                Navigator.of(context).pop();
               }
             },
             child: const Text("Add Todo"),
