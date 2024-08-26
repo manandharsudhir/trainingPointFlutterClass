@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todosecond/features/homepage/provider/todo_provider.dart';
 
-import '../../model/todo_model.dart';
+
 import 'todo_item_widget.dart';
 
 class AllTodos extends ConsumerWidget {

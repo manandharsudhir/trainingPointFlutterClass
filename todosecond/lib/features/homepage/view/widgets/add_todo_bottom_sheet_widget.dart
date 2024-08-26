@@ -1,13 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todosecond/features/homepage/model/todo_model.dart';
 import 'package:todosecond/features/homepage/provider/todo_provider.dart';
 
 class AddTodoBottomSheetWidget extends StatefulWidget {
-  AddTodoBottomSheetWidget({
-    super.key,
-  });
+  final TodoModel? todo;
+  const AddTodoBottomSheetWidget({super.key, this.todo});
 
   @override
   State<AddTodoBottomSheetWidget> createState() =>
@@ -30,7 +28,7 @@ class _AddTodoBottomSheetWidgetState extends State<AddTodoBottomSheetWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text("Add Todo"),
+        Text(widget.todo == null ? "Add Todo" : "Update Todo"),
         const SizedBox(
           height: 16,
         ),
@@ -63,18 +61,27 @@ class _AddTodoBottomSheetWidgetState extends State<AddTodoBottomSheetWidget> {
             )),
         Consumer(builder: (context, ref, child) {
           return ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                ref.read(todoProvider.notifier).addTodo(TodoModel(
-                      id: DateTime.now().millisecondsSinceEpoch,
-                      title: titleController.text,
-                      description: descController.text,
-                    ));
-                Navigator.of(context).pop();
-              }
-            },
-            child: const Text("Add Todo"),
-          );
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  if (widget.todo == null) {
+                    ref.read(todoProvider.notifier).addTodo(TodoModel(
+                          id: DateTime.now().millisecondsSinceEpoch,
+                          title: titleController.text,
+                          description: descController.text,
+                        ));
+                  } else {
+                    ref.read(todoProvider.notifier).updateTodo(TodoModel(
+                          id: widget.todo!.id,
+                          title: titleController.text,
+                          description: descController.text,
+                          status: widget.todo!.status,
+                        ));
+                  }
+
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text(widget.todo == null ? "Add Todo" : "Update Todo"));
         })
       ],
     );

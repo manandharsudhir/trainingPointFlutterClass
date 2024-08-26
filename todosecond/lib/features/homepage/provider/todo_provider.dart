@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todosecond/features/homepage/model/todo_model.dart';
 
@@ -16,10 +15,16 @@ class TodoProvider extends StateNotifier<List<TodoModel>> {
     state = [...state, todo];
   }
 
-  void updateTodo(TodoModel todo) {
-    final index = state.indexWhere((e) => e.id == todo.id);
-    state[index] = todo;
-    state = [...state];
+  void updateTodo(TodoModel updatedTodo) {
+    final index = state.indexWhere((todo) => todo.id == updatedTodo.id);
+    if (index != -1) {
+      state[index] = updatedTodo;
+      state = [...state];
+    }
+  }
+
+  void deleteTodo(String id) {
+    state = state.where((todo) => todo.id.toString() != id).toList();
   }
 
   void toggleStatus(int id) {
