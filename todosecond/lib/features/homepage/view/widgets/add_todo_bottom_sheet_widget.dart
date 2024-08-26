@@ -19,8 +19,12 @@ class _AddTodoBottomSheetWidgetState extends State<AddTodoBottomSheetWidget> {
 
   @override
   void initState() {
-    titleController = TextEditingController();
-    descController = TextEditingController();
+    titleController = TextEditingController(
+      text: widget.todo?.title,
+    );
+    descController = TextEditingController(
+      text: widget.todo?.description,
+    );
     super.initState();
   }
 
@@ -28,37 +32,46 @@ class _AddTodoBottomSheetWidgetState extends State<AddTodoBottomSheetWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(widget.todo == null ? "Add Todo" : "Update Todo"),
+        Text(
+          widget.todo == null ? "Add Todo" : "Update Todo",
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(
           height: 16,
         ),
-        Form(
-            key: formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: titleController,
-                  validator: (value) {
-                    if ((value ?? "").isEmpty) {
-                      return "Title cannot be empty";
-                    }
-                    return null;
-                  },
-                  decoration: const InputDecoration(
-                    hintText: "Title",
+        Padding(
+          padding: const EdgeInsets.all(16.0).copyWith(top: 0),
+          child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: titleController,
+                    validator: (value) {
+                      if ((value ?? "").isEmpty) {
+                        return "Title cannot be empty";
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      hintText: "Title",
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                TextFormField(
-                  controller: descController,
-                  decoration: const InputDecoration(
-                    hintText: "descrption",
+                  const SizedBox(
+                    height: 16,
                   ),
-                ),
-              ],
-            )),
+                  TextFormField(
+                    controller: descController,
+                    decoration: const InputDecoration(
+                      hintText: "descrption",
+                    ),
+                  ),
+                ],
+              )),
+        ),
         Consumer(builder: (context, ref, child) {
           return ElevatedButton(
               onPressed: () {

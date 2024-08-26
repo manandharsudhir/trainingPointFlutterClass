@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todosecond/features/homepage/model/todo_model.dart';
+import 'package:todosecond/features/homepage/services/todo_services.dart';
 
 // final todoProvider = StateProvider<List<TodoModel>>((ref) {
 //   return [];
@@ -9,7 +10,14 @@ final todoProvider = StateNotifierProvider<TodoProvider, List<TodoModel>>(
     (ref) => TodoProvider());
 
 class TodoProvider extends StateNotifier<List<TodoModel>> {
-  TodoProvider() : super([]);
+  TodoProvider() : super([]) {
+    getTodo();
+  }
+  TodoServices todoServices = TodoServices();
+
+  getTodo() async {
+    state = await todoServices.getTodo();
+  }
 
   void addTodo(TodoModel todo) {
     state = [...state, todo];
@@ -29,14 +37,12 @@ class TodoProvider extends StateNotifier<List<TodoModel>> {
 
   void toggleStatus(int id) {
     final index = state.indexWhere((e) => e.id == id);
-    state[index] = TodoModel(
-      id: state[index].id,
-      title: state[index].title,
-      description: state[index].description,
+    state[index] = state[index].copyWith(
       status: state[index].status == TodoStatus.completed
           ? TodoStatus.incompleted
           : TodoStatus.completed,
     );
+
     state = [...state];
   }
 }
