@@ -49,7 +49,7 @@ class TodoItemWidget extends ConsumerWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          ref.read(todoProvider.notifier).toggleStatus(todo.id);
+          ref.read(todoProvider.notifier).toggleStatus(todo.id.toString());
         },
         behavior: HitTestBehavior.opaque,
         child: Container(

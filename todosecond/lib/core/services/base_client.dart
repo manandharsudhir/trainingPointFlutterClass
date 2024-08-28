@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 class BaseClient {
-  Dio dio = Dio(
+  final Dio _dio = Dio(
     BaseOptions(
       baseUrl: 'https://api.nstack.in/v1',
       connectTimeout: const Duration(seconds: 30),
@@ -19,7 +19,7 @@ class BaseClient {
       {Map<String, dynamic>? queryParameters,
       Map<String, dynamic>? headers}) async {
     try {
-      Response response = await dio.get(
+      Response response = await _dio.get(
         path,
         queryParameters: queryParameters,
         options: Options(
@@ -27,7 +27,7 @@ class BaseClient {
         ),
       );
       return response.data;
-    } on DioException catch (e) {
+    } on DioException catch (_) {
       rethrow;
     } catch (e) {
       rethrow;

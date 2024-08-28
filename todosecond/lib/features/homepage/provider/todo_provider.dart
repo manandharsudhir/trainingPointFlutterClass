@@ -16,7 +16,11 @@ class TodoProvider extends StateNotifier<List<TodoModel>> {
   TodoServices todoServices = TodoServices();
 
   getTodo() async {
-    state = await todoServices.getTodo();
+    try {
+      state = await todoServices.getTodo();
+    } catch (e) {
+      state = [];
+    }
   }
 
   void addTodo(TodoModel todo) {
@@ -35,7 +39,7 @@ class TodoProvider extends StateNotifier<List<TodoModel>> {
     state = state.where((todo) => todo.id.toString() != id).toList();
   }
 
-  void toggleStatus(int id) {
+  void toggleStatus(String id) {
     final index = state.indexWhere((e) => e.id == id);
     state[index] = state[index].copyWith(
       status: state[index].status == TodoStatus.completed

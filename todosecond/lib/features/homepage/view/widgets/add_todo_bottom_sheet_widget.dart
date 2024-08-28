@@ -78,7 +78,7 @@ class _AddTodoBottomSheetWidgetState extends State<AddTodoBottomSheetWidget> {
                 if (formKey.currentState!.validate()) {
                   if (widget.todo == null) {
                     ref.read(todoProvider.notifier).addTodo(TodoModel(
-                          id: DateTime.now().millisecondsSinceEpoch,
+                          id: DateTime.now().millisecondsSinceEpoch.toString(),
                           title: titleController.text,
                           description: descController.text,
                         ));

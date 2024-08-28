@@ -2,7 +2,7 @@ class TodoModel {
   final String title;
   final String description;
   TodoStatus status;
-  final int id;
+  final String id;
 
   TodoModel({
     required this.id,
@@ -22,6 +22,14 @@ class TodoModel {
       status: status ?? this.status,
       id: id,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "title": title,
+      "description": description,
+      "is_completed": status == TodoStatus.completed,
+    };
   }
 
   factory TodoModel.fromJson(Map<String, dynamic> data) {
