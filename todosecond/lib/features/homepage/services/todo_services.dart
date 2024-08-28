@@ -15,4 +15,14 @@ class TodoServices {
       rethrow;
     }
   }
+
+  //simple get method
+  // getTodo() async {
+  //   final response = Dio(BaseOptions(
+  //     baseUrl: "https://api.nstack.in/v1/",
+  //     connectTimeout: Duration(seconds: 30),
+  //     receiveTimeout: Duration(seconds: 30),
+  //   )).get("todos");
+  //   print(response.toString());
+  // }
 }

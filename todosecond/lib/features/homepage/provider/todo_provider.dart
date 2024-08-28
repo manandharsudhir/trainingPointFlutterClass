@@ -17,7 +17,8 @@ class TodoProvider extends StateNotifier<List<TodoModel>> {
 
   getTodo() async {
     try {
-      state = await todoServices.getTodo();
+      await todoServices.getTodo();
+      state = [];
     } catch (e) {
       state = [];
     }
