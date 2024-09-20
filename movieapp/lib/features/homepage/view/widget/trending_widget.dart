@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movieapp/core/configs/style/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:movieapp/core/constants/api_constants.dart';
 import 'package:movieapp/features/homepage/provider/trending_provider.dart';
 import '../../../../core/widgets/image_builder.dart';
 
@@ -32,7 +33,7 @@ class TrendingMovies extends ConsumerWidget {
                   opacity: 0.5,
                   child: ImageBuilder(
                     url:
-                        "https://media.themoviedb.org/t/p/w600_and_h900_bestv2${data[index].backdropPath}",
+                        "${ApiConstants.imageBaseUrl}${data[index].backdropPath}",
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
