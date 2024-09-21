@@ -104,12 +104,13 @@ import '../widget/todo_list.dart';
 //   }
 // }
 
-class Homepage extends ConsumerWidget {
+class Homepage extends StatelessWidget {
   const Homepage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final todos = ref.watch(todoProvider);
+  Widget build(
+    BuildContext context,
+  ) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Todo App"),
@@ -139,18 +140,33 @@ class Homepage extends ConsumerWidget {
               ],
             ),
             Expanded(
-              child: TabBarView(
-                children: [
-                  TodoList(
-                    todos: todos,
-                  ),
-                  TodoList(
-                    todos: todos.where((e) => e.isCompleted).toList(),
-                  ),
-                  TodoList(
-                    todos: todos.where((e) => !e.isCompleted).toList(),
-                  ),
-                ],
+              child: Consumer(
+                builder: (context, ref, _) {
+                  final todosState = ref.watch(todoProvider);
+                  return todosState.when(data: (todos) {
+                    return TabBarView(
+                      children: [
+                        TodoList(
+                          todos: todos,
+                        ),
+                        TodoList(
+                          todos: todos.where((e) => e.isCompleted).toList(),
+                        ),
+                        TodoList(
+                          todos: todos.where((e) => !e.isCompleted).toList(),
+                        ),
+                      ],
+                    );
+                  }, error: (e, st) {
+                    return Center(
+                      child: Text(e.toString()),
+                    );
+                  }, loading: () {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  });
+                },
               ),
             )
           ],
